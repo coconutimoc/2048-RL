@@ -1,0 +1,126 @@
+"""
+This file contains the strategy function that will be used to determine the next move of the agent.
+The function should take a matrix object as input and return a string representing the direction of the next move.
+The possible directions are 'up', 'down', 'left', and 'right'.
+
+The strategy function is generated through the following steps:
+
+1 - generate a game tree after several actions( considering all possible actions and all possible generated numbers)
+2 - calculate the attribute of each leave in the tree
+  - points gained
+  - degree of aggregation
+  - degree of order
+3 - evaluate the attribute of each node in the tree by weighted sum of attributes
+4 - choose the best action whose expectation of the attribute is the highest
+"""
+
+import numpy as np
+import matrix as mk
+import random
+
+# declare directions
+directions = ['up', 'down', 'left', 'right']
+# declare weights vector and attributes vector
+weights = [20, 20, 7]
+attributes = ['points', 'aggregation', 'order']
+# set the depth of game tree
+depth = 2
+
+"""
+functions for attributes calculation
+"""
+
+def points_gained(leaf):
+    return leaf[1]
+
+def centers_of_samevalue(matrix):
+    centers = []
+    for index in range(1,15):
+        line_sum = 0
+        column_sum = 0
+        num = 0
+        for line in range(4):
+            for column in range(4):
+                if matrix[line][column] == np.power(2,index):
+                    line_sum += line
+                    column_sum += column
+                    num += 1
+        if num != 0:
+            centers.append([index,line_sum/num, column_sum/num])
+    return centers
+
+
+def aggregation_degree(leaf):
+    degree = 0
+    for center in centers_of_samevalue(leaf[0]):
+        for line in range(4):
+            for column in range(4):
+                if leaf[0][line][column] == np.power(2,center[0]):
+                    degree += (20-center[0])*(abs(center[1]-line)+abs(center[2]-column))
+    return - degree
+
+def order_degree(leaf):
+    degree = 0
+    centers = centers_of_samevalue(leaf[0])
+    if len(centers) == 1:
+        return 0
+    for i in range(len(centers)-1):
+        degree += abs(centers[i][1]-centers[i+1][1])+abs(centers[i][2]-centers[i+1][2])
+    return degree
+
+"""
+class for game tree
+leaf = [matrix, points]
+node = [matrix, points, ['up',childrens], ['down',childrens], ['left',childrens], ['right',childrens]]
+"""
+class game_tree:
+    def __init__(self, root_matrix, depth:int):
+        """root_matrix should be a copy of np.array"""
+        root = [root_matrix, 0]
+        self.tree = self.generate_tree(root, depth)
+    
+    def is_leaf(self, tree):
+        return len(tree) == 2
+    
+    def generate_tree(self, tree, depth:int):
+        if depth == 0:
+            return tree
+        else:
+            for action in directions:
+                action_branch = [action]
+                mat = mk.matrix(4, tree[0].copy(),tree[1])
+                if not mat.update_without_generate(action):
+                    continue
+                empty_cells = mat.empty_cells() 
+                for line, column in empty_cells:
+                    for i in [2,4]:
+                        mat_copy = mat.matrix.copy()
+                        mat_copy[line][column] = i
+                        children = [mat_copy,mat.score]
+                        action_branch.append(self.generate_tree(children, depth-1))
+                tree.append(action_branch)
+            return tree
+          
+
+    def evaluate_tree(self, tree):
+        if self.is_leaf(tree):
+            return np.dot(weights, [points_gained(tree), aggregation_degree(tree), order_degree(tree)])
+        else:
+            return np.max([np.average([self.evaluate_tree(Tree) for Tree in action_branch[1:]]) for action_branch in tree[2:]])
+            
+
+    def decision(self):
+        max = -np.inf
+        decision = random.choice(directions)
+        for action_branch in self.tree[2:]:
+            evaluate = np.average([self.evaluate_tree(tree) for tree in action_branch[1:]])
+            if evaluate > max:
+                max = evaluate
+                decision = action_branch[0]
+        print(decision)
+        return decision
+            
+def strategy(matrix):
+    gametree = game_tree(matrix, depth)
+    return gametree.decision()
+    #return random.choice(directions)

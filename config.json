@@ -8,47 +8,46 @@
             "a":"left",
             "s":"down",
             "d":"right",
-            "<control-q>":"exit"
+            "Escape":"quit"
         },
         "window":{
             "title":"2048",
-            "geometry":"800x800",
             "position":"center",
             "bg":"white"
         },
         "score_label":{
             "font":{
-                "family":"Arial",
-                "size":20,
+                "family":"Helvetica",
+                "size":22,
                 "weight":"bold"
             }
         },
         "cell":{
             "font":{
-                "family":"Arial",
-                "size":20,
+                "family":"Helvetica",
+                "size":24,
                 "weight":"bold"
             },
             "width":4,
             "height":2,
             "color":{
-                "0":"grey",
-                "2":"#FF0000",
-                "4":"#00FF00",
-                "8":"#0000FF",
-                "16":"#FFFF00",
-                "32":"#FF00FF",
-                "64":"#00FFFF",
-                "128":"#FF8000",
-                "256":"#FF0080",
-                "512":"#80FF00",
-                "1024":"#0080FF",
-                "2048":"#8000FF",
-                "4096":"#00FF80",
-                "8192":"#FF0080",
-                "16384":"#FF8000",
-                "32768":"#FF0080"
-            }         
+                "0":"#CDC1B4",
+                "2":"#EEE4DA",
+                "4":"#EDE0C8",
+                "8":"#F2B179",
+                "16":"#F59563",
+                "32":"#F67C5F",
+                "64":"#F65E3B",
+                "128":"#EDCF72",
+                "256":"#EDCC61",
+                "512":"#EDC850",
+                "1024":"#EDC53F",
+                "2048":"#EDC22E",
+                "4096":"#3C3A32",
+                "8192":"#3C3A32",
+                "16384":"#3C3A32",
+                "32768":"#3C3A32"
+            }
         }
     },
     {
@@ -57,43 +56,42 @@
         "dimension":4,
         "window":{
             "title":"2048",
-            "geometry":"800x800",
             "position":"center",
             "bg":"white"
         },
         "score_label":{
             "font":{
-                "family":"Arial",
-                "size":20,
+                "family":"Helvetica",
+                "size":22,
                 "weight":"bold"
             }
         },
         "cell":{
             "font":{
-                "family":"Arial",
-                "size":20,
+                "family":"Helvetica",
+                "size":24,
                 "weight":"bold"
             },
             "width":4,
             "height":2,
             "color":{
-                "0":"grey",
-                "2":"#FF0000",
-                "4":"#00FF00",
-                "8":"#0000FF",
-                "16":"#FFFF00",
-                "32":"#FF00FF",
-                "64":"#00FFFF",
-                "128":"#FF8000",
-                "256":"#FF0080",
-                "512":"#80FF00",
-                "1024":"#0080FF",
-                "2048":"#8000FF",
-                "4096":"#00FF80",
-                "8192":"#FF0080",
-                "16384":"#FF8000",
-                "32768":"#FF0080"
-            }         
+                "0":"#CDC1B4",
+                "2":"#EEE4DA",
+                "4":"#EDE0C8",
+                "8":"#F2B179",
+                "16":"#F59563",
+                "32":"#F67C5F",
+                "64":"#F65E3B",
+                "128":"#EDCF72",
+                "256":"#EDCC61",
+                "512":"#EDC850",
+                "1024":"#EDC53F",
+                "2048":"#EDC22E",
+                "4096":"#3C3A32",
+                "8192":"#3C3A32",
+                "16384":"#3C3A32",
+                "32768":"#3C3A32"
+            }
         }
     },
     {

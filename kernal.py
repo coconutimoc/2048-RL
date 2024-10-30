@@ -20,7 +20,7 @@ class game2048:
 
     def status(self):
         """return the status of 2048game"""
-        return [self.matrix, self.score]
+        return [self.matrix.copy(), self.score]
 
     def empty_cells(self):
         """return the empty cells in the matrix"""

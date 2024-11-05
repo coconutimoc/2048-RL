@@ -75,7 +75,7 @@ class GUI:
         self.game_over_label.grid(row=0, column=0, columnspan=self.game.dimension)
         self.master.unbind('<Key>')
         self.master.bind('<Key>', self.quit)
-        with open('log.csv', 'a+') as log:
+        with open('log/ui_log.csv', 'a+') as log:
             log.write(f'{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}, {user}, {self.game.dimension},{self.game.score}\n')
         
     def quit(self, event):

@@ -1,2 +1,6 @@
-.vscode/*
-*.pyc
+__pycache__/
+config/__pycache__/
+.bak/
+.vscode/
+log/
+nohup.out

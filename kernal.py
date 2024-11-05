@@ -1,38 +1,76 @@
+"""
+The game2048 class is the neural data structure of this project, and serves as
+the kernak of gui. It records and updated the game state(time, score, matrix).
+
+It also provides APIs to operate the status of game:
+
+    - clone(game: game2048)->None: clone the state of another game
+
+    - reset()->None: reset the game (time,score,matrix)
+
+    - move(direction:str)->bool: move the matrix and uodate score(without
+             generating a new number) and return if the matrix has changed
+
+    - update(direction:str)->bool: update time, score and matrix(random generate)
+            and return if the matrix has changed
+
+    - gameover()->bool: return if the game is over
+"""
+
+
 import numpy as np
 import random
 
 class game2048:
-    def __init__(self,dimension):
-        self.dimension = dimension    
-        self.time = 0  
+    def __init__(self,dimension:int) -> None:
+        """initialize the game
+        Args:
+            dimension: the dimension of the game matrix
+        parameters:
+            time: the number of steps
+            score: the score player gained
+            dimension: the dimension of the game matrix
+            matrix: the game matrix
+            cm: the copy of the game matrix(used to check if the matrix has changed)
+        """
+        #constant
+        self.dimension = dimension
+        #state of game
+        self.time = 0
         self.score = 0
-        self.last_score = 0                            
         self.matrix = np.zeros((dimension,dimension))
         self.random_generate()
         self.last_matrix = self.matrix.copy()
+        #tools
         self.cm = np.zeros((dimension,dimension))
 
-    def reset(self):
+    def clone(self,game)->None:
+        """clone the state of another game"""
+        self.time = game.time
+        self.score = game.score
+        self.dimension = game.dimension
+        self.matrix = game.matrix.copy()
+
+    def reset(self) -> None:
+        """reset the game (time,score,matrix)"""
         self.score = 0
-        self.last_score = 0
+        self.time = 0
         for line in range(self.dimension):
             for col in range(self.dimension):
                 self.matrix[line][col] = 0
         self.random_generate()
-        for line in range(self.dimension):
-            for col in range(self.dimension):
-                self.last_matrix[line][col] = self.matrix[line][col]
-        self.time = 0
 
-    def random_generate(self):
+    def random_generate(self) -> None:
+        """randomly generate a 2 or 4 in an empty cell"""
         while True:
-            x = random.randint(0,self.dimension-1)
-            y = random.randint(0,self.dimension-1)
-            if self.matrix[x][y] == 0:
-                self.matrix[x][y] = random.choice([2,4])
+            line = random.randint(0,self.dimension-1)
+            col = random.randint(0,self.dimension-1)
+            if self.matrix[line][col] == 0:
+                self.matrix[line][col] = random.choice([2,4])
                 break
     
-    def move_up(self):
+    def move_up(self)->None:
+        """move the matrix up and update the score if needed"""
         for col in range(self.dimension):
             for line in range(1,self.dimension):
                 while line > 0 and self.matrix[line][col] != 0 and self.matrix[line-1][col] == 0:
@@ -51,7 +89,8 @@ class game2048:
                     self.matrix[line][col] = 0
                     line -= 1
 
-    def move_down(self):
+    def move_down(self)->None:
+        """move the matrix down and update the score if needed"""
         for col in range(self.dimension):
             for line in range(self.dimension-2,-1,-1):
                 while line < self.dimension-1 and self.matrix[line][col] != 0 and self.matrix[line+1][col] == 0:
@@ -70,7 +109,8 @@ class game2048:
                     self.matrix[line][col] = 0
                     line += 1
 
-    def move_left(self):
+    def move_left(self)->None:
+        """move the matrix left and update the score if needed"""
         for line in range(self.dimension):
             for col in range(1,self.dimension):
                 while col > 0 and self.matrix[line][col] != 0 and self.matrix[line][col-1] == 0:
@@ -89,7 +129,8 @@ class game2048:
                     self.matrix[line][col] = 0
                     col -= 1
     
-    def move_right(self):
+    def move_right(self)->None:
+        """move the matrix right and update the score if needed"""
         for line in range(self.dimension):
             for col in range(self.dimension-2,-1,-1):
                 while col < self.dimension-1 and self.matrix[line][col] != 0 and self.matrix[line][col+1] == 0:
@@ -108,7 +149,10 @@ class game2048:
                     self.matrix[line][col] = 0
                     col += 1
 
-    def move(self,direction):
+    def move(self,direction)->bool:
+        """move the matrix in the given direction and return if the matrix has changed
+        used to update the matrix without generating a new number
+        """
         for col in range(self.dimension):
             for line in range(self.dimension):
                 self.cm[line][col] = self.matrix[line][col]
@@ -128,16 +172,16 @@ class game2048:
                     break
         return changed
     
-    def update(self,direction):
-        last_score = self.score
+    def update(self,direction)->bool:
+        """update the time, random generate and return if the matrix has changed"""
         changed = self.move(direction)
         if changed:
-            self.last_score = last_score
             self.time += 1
             self.random_generate()
         return changed
 
-    def gameover(self):
+    def gameover(self)->bool:
+        """return if the game is over"""
         for line in range(self.dimension):
             for col in range(self.dimension):
                 if self.matrix[line][col] == 0:
@@ -154,6 +198,7 @@ class game2048:
 
     def print(self):
         """print the matrix and score(point)"""
+        print('Time:', self.time)
         print('Score:', self.score)
         print("matrix:")        
         print()
@@ -166,10 +211,22 @@ class game2048:
 if __name__ == '__main__':
     game = game2048(4)
     game.print()
-    while not game.gameover():
-        direction = input("Enter the direction: ")
-        _ = game.update(direction)
-        game.print()
-    print("Game Over!")
-
-    
+    game.move('up')
+    game.print()
+    game.move('down')
+    game.print()
+    game.move('left')
+    game.print()
+    game.move('right')
+    game.print()
+    game.update('up')
+    game.print()
+    game.update('down')
+    game.print()
+    game.update('left')
+    game.print()
+    game.update('right')
+    game.print()
+    print(game.gameover())
+    game.reset()
+    game.print()

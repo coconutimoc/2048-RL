@@ -1,12 +1,13 @@
 """
-This file creates a GUI for the 2048 game.
+This file creates a GUI for the 2048 game based on the game2048 class in kernal.py.
 Configurations of GUI are stored in gui_config.py.
 """
 
 from kernal import game2048
+from gui_config import *
 import tkinter as tk
 from datetime import datetime
-from config.gui_config import *
+
 
 class GUI:
     def __init__(self, master):
@@ -27,8 +28,10 @@ class GUI:
         self.game = game2048(dimension=dimension)
         
         # Initialize the UI
+        self.time_label = tk.Label(self.frame, text='Time:0', font=(score_label_font_family, score_label_font_size, score_label_font_weight))
+        self.time_label.grid(row=0, column=0, columnspan=self.game.dimension//2, pady=10)
         self.score_label = tk.Label(self.frame, text=f'Score:{int(self.game.score)}', font=(cell_font_family, cell_font_size, cell_font_weight))
-        self.score_label.grid(row=0, column=0, columnspan=self.game.dimension, pady=10)
+        self.score_label.grid(row=0, column=2, columnspan=self.game.dimension//2, pady=10)
         
         self.cells = []
         for line in range(0, self.game.dimension):
@@ -57,6 +60,19 @@ class GUI:
                 else:
                     self.cells[index].config(text=str(int(value)), bg=colormap[str(int(value))])
         self.score_label.config(text=f'Score:{int(self.game.score)}')
+        self.time_label.config(text=f'Time:{int(self.game.time)}')
+
+    def animate_move(self, direction):
+        """
+        Animate the move in the given direction
+        """
+        steps = 10  # Number of animation steps
+        delay = 50  # Delay between steps in milliseconds
+
+        for step in range(steps):
+            self.master.after(step * delay, self.update_ui)
+            self.master.update_idletasks()
+        self.update_ui()
     
     def key_pressed(self, event):
         """
@@ -64,7 +80,7 @@ class GUI:
         """
         if keymap[event.keysym] in ['up', 'down', 'left', 'right']:
             self.game.update(keymap[event.keysym])
-            self.update_ui()
+            self.animate_move(keymap[event.keysym])
             if self.game.gameover():
                 self.game_over()
         if keymap[event.keysym] == 'quit':
@@ -75,8 +91,8 @@ class GUI:
         self.game_over_label.grid(row=0, column=0, columnspan=self.game.dimension)
         self.master.unbind('<Key>')
         self.master.bind('<Key>', self.quit)
-        with open('log/ui_log.csv', 'a+') as log:
-            log.write(f'{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}, {user}, {self.game.dimension},{self.game.score}\n')
+        with open('gui_log.csv', 'a+') as log:
+            log.write(f'{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}, {user}, {self.game.dimension},{self.game.time},{self.game.score}\n')
         
     def quit(self, event):
         if keymap[event.keysym] == 'quit':

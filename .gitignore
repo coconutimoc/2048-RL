@@ -1,6 +1,5 @@
 __pycache__/
-config/__pycache__/
 .bak/
 .vscode/
-log/
 nohup.out
+models/

@@ -3,17 +3,10 @@ The game2048 class is the neural data structure of this project, and serves as
 the kernak of gui. It records and updated the game state(time, score, matrix).
 
 It also provides APIs to operate the status of game:
-
     - clone(game: game2048)->None: clone the state of another game
-
     - reset()->None: reset the game (time,score,matrix)
-
-    - move(direction:str)->bool: move the matrix and uodate score(without
-             generating a new number) and return if the matrix has changed
-
-    - update(direction:str)->bool: update time, score and matrix(random generate)
-            and return if the matrix has changed
-
+    - move(direction:str)->bool: move the matrix and uodate score(without generating a new number) and return if the matrix has changed
+    - update(direction:str)->bool: update time, score and matrix(random generate) and return if the matrix has changed
     - gameover()->bool: return if the game is over
 """
 
